@@ -1,56 +1,64 @@
 #!/bin/bash
 
-# Función para buscar programas en el AUR utilizando la API web
+# Function to search programs on AUR using the api web
 search_aur() {
     local query="$1"
     local url="https://aur.archlinux.org/rpc/?v=5&type=search&arg=$query"
     local response=$(curl -s "$url")
 
-    # Verificar si hay errores en la respuesta
+    # Verify if showing errors on answer
     if [[ "$response" == *"error"* ]]; then
         echo "Error: No se pudo realizar la búsqueda en el AUR."
         exit 1
     fi
 
-    # Mostrar los nombres de los programas relacionados con la entrada proporcionada
+    # Show names of the programs related with the input of user
     echo "Resultados de la búsqueda en el AUR para '$query':"
     echo "$response" | jq -r '.results[] | select(.Name | contains($query)) | .Name' --arg query "$query"
 }
 
-# Función para descargar e instalar un programa del AUR
+# Function to download and install a program of AUR
 install_aur_package() {
     local package_name="$1"
     local aur_url="https://aur.archlinux.org/$package_name.git"
-    local temp_dir="$(mktemp -d)"
+    local temp_dir
 
-    # Clonar el repositorio del AUR
-    git clone "$aur_url" "$temp_dir" >/dev/null 2>&1
+    # Validate the package name
+    if ! [[ "$package_name" =~ ^[a-zA-Z0-9._-]+$ ]]; then
+        echo "Error: El nombre del paquete es inválido."
+        exit 1
+    fi
 
-    # Cambiar al directorio del paquete
-    cd "$temp_dir" || exit
+    # Create a temporal directory of safe way 
+    temp_dir="$(mktemp -d)" || { echo "Error: No se pudo crear el directorio temporal."; exit 1; }
 
-    # Compilar e instalar el paquete
-    makepkg -si --noconfirm
+    # Cloning the repo of AUR of safe way
+    git clone "$aur_url" "$temp_dir" >/dev/null 2>&1 || { echo "Error: No se pudo clonar el repositorio del AUR."; exit 1; }
 
-    # Regresar al directorio original
+    # Change to package directory
+    cd "$temp_dir" || { echo "Error: No se pudo cambiar al directorio del paquete."; exit 1; }
+
+    # Compile and install the package
+    makepkg -si --noconfirm || { echo "Error: No se pudo compilar e instalar el paquete."; exit 1; }
+
+    # Return to original directoy
     cd - >/dev/null || exit
 
-    # Eliminar el directorio temporal
+    # Delete the temp directory
     rm -rf "$temp_dir"
 }
 
-# Comprobación de argumentos
+# Checking arguments
 if [ $# -eq 0 ]; then
     echo "Uso: $0 <nombre_del_programa>"
     exit 1
 fi
 
-# Llamar a la función de búsqueda
+# Calling to search function
 search_aur "$1"
 
-# Pedir al usuario que seleccione un programa para instalar
+# Ask the user to select a program to install
 read -p "Ingrese el nombre del programa que desea instalar: " program_to_install
 
-# Llamar a la función para instalar el programa seleccionado
+# Call to function to install the select program
 install_aur_package "$program_to_install"
-
