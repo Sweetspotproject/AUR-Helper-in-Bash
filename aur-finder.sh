@@ -21,16 +21,25 @@ search_aur() {
 install_aur_package() {
     local package_name="$1"
     local aur_url="https://aur.archlinux.org/$package_name.git"
-    local temp_dir="$(mktemp -d)"
+    local temp_dir
 
-    # Clonar el repositorio del AUR
-    git clone "$aur_url" "$temp_dir" >/dev/null 2>&1
+    # Validar el nombre del paquete
+    if ! [[ "$package_name" =~ ^[a-zA-Z0-9._-]+$ ]]; then
+        echo "Error: El nombre del paquete es inválido."
+        exit 1
+    fi
+
+    # Crear un directorio temporal de manera segura
+    temp_dir="$(mktemp -d)" || { echo "Error: No se pudo crear el directorio temporal."; exit 1; }
+
+    # Clonar el repositorio del AUR de manera segura
+    git clone "$aur_url" "$temp_dir" >/dev/null 2>&1 || { echo "Error: No se pudo clonar el repositorio del AUR."; exit 1; }
 
     # Cambiar al directorio del paquete
-    cd "$temp_dir" || exit
+    cd "$temp_dir" || { echo "Error: No se pudo cambiar al directorio del paquete."; exit 1; }
 
     # Compilar e instalar el paquete
-    makepkg -si --noconfirm
+    makepkg -si --noconfirm || { echo "Error: No se pudo compilar e instalar el paquete."; exit 1; }
 
     # Regresar al directorio original
     cd - >/dev/null || exit
@@ -53,4 +62,3 @@ read -p "Ingrese el nombre del programa que desea instalar: " program_to_install
 
 # Llamar a la función para instalar el programa seleccionado
 install_aur_package "$program_to_install"
-
