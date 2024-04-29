@@ -1,4 +1,4 @@
-![Logo](https://i0.wp.com/discovery.endeavouros.com/wp-content/uploads/2021/03/AUR.png?fit=700%2C315&ssl=1)
+![Logo](https://aurfinder.surge.sh/assets/logo-aurfinder.png)
 
 
 # AUR Finder
