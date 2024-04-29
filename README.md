@@ -14,7 +14,7 @@ This is a bit tool for help you to download programs of AUR but without install 
 
     git clone https://github.com/Sweetspotproject/AUR-Helper-in-Bash.git
 
-3 - Add the location of the script to the path inside the .zshrc file, as follows:
+3 - Add the location of the script to the path inside the .zshrc or .bashrc file, as follows:
 
 This depends on the names of your directories.
 
