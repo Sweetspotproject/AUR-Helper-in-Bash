@@ -33,7 +33,10 @@ For .bashrc:
 # How to Use
 
 Simply type aur-finder.sh followed by the program or package you are looking for, all those related to your search will appear.
+
 Example:
->>> aur-finder.sh visual-studio-bin-code
+
+![aurfinder-ezgif com-video-to-gif-converter](https://github.com/Sweetspotproject/AUR-Helper-in-Bash/assets/105566461/33ed8113-d80e-45fd-aa95-2ee8e06201de)
+
 
 # Thanks :)
