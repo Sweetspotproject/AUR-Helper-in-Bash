@@ -32,7 +32,7 @@ For .bashrc:
 #
 # How to Use
 
-Simply type liten.sh followed by the program or package you are looking for, all those related to your search will appear.
+Simply type liten.sh followed by the program or package you are looking for, and all those related to your search will appear.
 
 Example:
 
