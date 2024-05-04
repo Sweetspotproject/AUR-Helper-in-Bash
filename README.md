@@ -30,4 +30,10 @@ For .bashrc:
 4 - Simply type source .zshrc or source .bashrc to update the file and that's it, you can use it in your terminal.
 
 #
+# How to Use
+
+Simply type aur-finder.sh followed by the program or package you are looking for, all those related to your search will appear.
+Example:
+>>> aur-finder.sh visual-studio-bin-code
+
 # Thanks :)
